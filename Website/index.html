@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>GHOST | GUID GENERATOR</title>
+		<link rel="shortcut icon" type="image/svg" href="img/logotype.svg">
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<style type="text/css">
+			html {
+				min-width: 320px;
+			}
+			.raised-block {
+				background-color: #fff;
+				margin-bottom: 10px;
+				margin-left: 0;
+				margin-right: -0.625rem;
+				padding-left: 0.625rem;
+				padding-right: 0.625rem;
+			}
+			.info-block-padding {
+				padding: 0.3rem;
+			}
+			@media (max-width: 33.9em) {
+				.raised-block {
+					margin-left: -0.625rem;
+				}
+			}
+			.row [class^="col-"]:first-child>.raised-block {
+				margin-left: -0.625rem;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-dark bg-dark sticky-top">
+			<div class="container">
+				<a class="navbar-brand" href="/">
+					<img src="img/logotype.svg" alt="" width="30" height="24" class="d-inline-block align-text-top">GHOST <span class="text-muted">GUID GENERATOR</span>
+				</a>
+			</div>
+		</nav>
+		<div class="container bg-light">
+			<br><br>
+			<div class="input-group mb-3">
+				<input class="form-control text-center" type="text" id="Field-GUID" name="Field-GUID" placeholder="GUID" readonly>
+				<button class="btn btn-primary" type="submit" name="generate-guid" onclick="ButtonGUID();">GENERATE</button>
+			</div>
+			<br>
+			<div class="row justify-content-center py-3">
+				<div class="text-center row">
+					<div class="col-sm">
+						<div class="raised-block border border-info info-block-padding">
+							<h5>Settings</h5>
+							<br>
+							<input class="form-check-input" type="checkbox" id="Checkbox-AutoCopy" checked>
+							<label class="form-check-label" for="Checkbox-AutoCopy">Auto copy</label>
+							<br><br>
+							<div class="input-group mb-3">
+								<span class="input-group-text">Length</span>
+								<input type="number" class="form-control" id="Field-Length" placeholder="Length" min="1" value="32">
+							</div>
+							<div class="input-group mb-3">
+								<span class="input-group-text">Vocabulary</span>
+								<input type="text" class="form-control" id="Field-Vocabulary" placeholder="Vocabulary" min="1" value="abcdef0123456789">
+							</div>
+							<div class="input-group mb-3">
+								<span class="input-group-text">Format</span>
+								<input type="text" class="form-control" id="Field-Format" placeholder="Example: My GUID is {GUID}" min="1" value="{GUID}">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<footer class="d-flex flex-wrap py-3 border-top text-center">
+				<p class="col-md-12 mb-0 text-muted" id="copyright-text"></p>
+			</footer>
+		</div>
+		<script type="text/javascript">
+			const Checkbox_AutoCopy = document.getElementById("Checkbox-AutoCopy");
+			const Field_GUID = document.getElementById("Field-GUID");
+			const Field_Length = document.getElementById("Field-Length");
+			const Field_Vocabulary = document.getElementById("Field-Vocabulary");
+			const Field_Format = document.getElementById("Field-Format");
+			function RandomInt(Min, Max) {
+				return Math.floor(Min + Math.random() * (Max + 1 - Min));
+			}
+			function GenerateGUID() {
+				let GUIDLength = 32;
+				let GUIDVocabulary = 'ABCDEFabcdef0123456789';
+				let GUIDString = '';
+				let GUIDFormat = '{GUID}';
+				if (parseInt(Field_Length.value) > 0) {
+					GUIDLength = parseInt(Field_Length.value);
+				} else {
+					Field_Length.value = GUIDLength;
+					alert('Invalid GUID length. The default values are set.');
+				}
+				if (Field_Vocabulary.value.length > 0) {
+					GUIDVocabulary = Field_Vocabulary.value;
+				} else {
+					Field_Vocabulary.value = GUIDVocabulary;
+					alert('Invalid GUID vocabulary. The default values are set.');
+				}
+				for (i=0; i<GUIDLength; i++) {
+					GUIDString += GUIDVocabulary[RandomInt(0, GUIDVocabulary.length-1)];
+				}
+				if (Field_Format.value.search("{GUID}") != -1) {
+					GUIDFormat = Field_Format.value;
+				} else {
+					Field_Format.value = GUIDFormat;
+					alert('The GUID format does not contain "{GUID}". The default values are set.');
+
+				}
+				return GUIDFormat = GUIDFormat.replace("{GUID}", GUIDString);
+			}
+			function ButtonGUID() {
+				Field_GUID.value = GenerateGUID();
+				if (Checkbox_AutoCopy.checked) {
+					Field_GUID.select();
+					document.execCommand("copy");
+				}
+			}
+			document.getElementById("copyright-text").innerHTML = "© " + new Date().getFullYear() + " GHOST";
+		</script>
+	</body>
+</html>
